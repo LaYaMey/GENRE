@@ -143,6 +143,11 @@
     "XRF: X-RAY FLUORESCENCE ANALYSIS"
   ],
   "missing_codes": [
+    "TIMS_CA_ID",
+    "EMP(EMPA)",
+    "SHIRMP",
+    "ICPMSA",
+    "EMP(EPMA)",
     "CSA",
     "SPEC_FE",
     "FT",
@@ -277,7 +282,6 @@
     "SM-ND AGE",
     "ICPMS_LA_SF ",
     "CHIME",
-    "ICPMSA",
     "DCP",
     "LECO",
     "IES",
@@ -300,10 +304,8 @@
     "EA",
     "S_LA",
     "M_RAM",
-    "TIMS_CA_ID",
     "CHNS",
     "ST",
-    "EMP(EMPA)",
     "GRAF",
     "PB208_TH232 AGE",
     "(U-TH)HE AGE",
@@ -336,7 +338,6 @@
     "ICMPS",
     "FEO",
     "TIMS_CA",
-    "T_COMB",
-    "SHIRMP"
+    "T_COMB"
   ]
 }

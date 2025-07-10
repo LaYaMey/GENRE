@@ -1,30 +1,39 @@
 import json
-
-
-# 1. Load your candidate entities JSON, assumed format: list of strings or dict keys
-with open("genre_input.json", "r") as f:
-    genre_input = json.load(f)
-
-candidate_entities = genre_input["candidate_entities"]
-missing_codes = genre_input["missing_codes"]
-
-from transformers import BartTokenizer
+import sys
+sys.path.append("/home/lars/fairseq")
 from genre.fairseq_model import GENRE
 from genre.trie import Trie
+import pickle
+import os
 
-# Load tokenizer and model
-tokenizer = BartTokenizer.from_pretrained("facebook/bart-large")
-model = GENRE.from_pretrained("models/fairseq_entity_disambiguation_aidayago").eval()
+model_path = "/home/lars/GENRE/models/fairseq_entity_disambiguation_aidayago"
+trie_file_path = "/home/lars/GENRE/data/candidate_methods_trie.pkl"
+json_path = "/home/lars/GENRE/Method_experiments/genre_input.json"
 
-# Tokenize them into ID sequences
-tokenized_entities = [
-    tokenizer.encode(entity, add_special_tokens=False)
-    for entity in candidate_entities
-]
+# 1. Load your candidate entities JSON
+with open(json_path, "r") as f:
+    genre_input = json.load(f)
+missing_codes = genre_input["missing_codes"]
 
+model = GENRE.from_pretrained(model_path).eval()
 
-# 2. Build trie from candidate entity strings
-trie = Trie(sequences=tokenized_entities)
+try:
+    with open(trie_file_path, "rb") as f:
+        trie = Trie.load_from_dict(pickle.load(f))
+    print(f"Trie successfully loaded from: {os.path.abspath(trie_file_path)}")
+except FileNotFoundError:
+    print(f"Trie File not found, creating Trie. Trie File expected at: {os.path.abspath(trie_file_path)}")
+    # Tokenize them into ID sequences
+    candidate_entities = genre_input["candidate_entities"]
+    trie = Trie([
+            [2] + model.encode(e).tolist()[1:]
+            for e in candidate_entities
+        ])
+    # Export GENRE trie
+    with open(trie_file_path, "wb") as f:
+        pickle.dump(trie.trie_dict, f)
+
+result_mappings = {}
 
 # Run GENRE on each sentence
 for missing_code in missing_codes:
@@ -41,3 +50,7 @@ for missing_code in missing_codes:
     print(f"\n{missing_code}")
     for r in results[0][:3]:  # top 3 candidates
         print(f"  → {r['text']} (score: {r['score'].item():.4f})")
+    result_mappings[missing_code] = results[0][0]["text"]
+
+with open("GENRE_MissingMethodcodeMapping.json", "w", encoding="utf-8") as f:
+    json.dump(result_mappings, f, ensure_ascii=False, indent=4)
