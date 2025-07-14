@@ -1,0 +1,10 @@
+services:
+  genre:
+    image: genre:latest
+    container_name: genre_server
+    ports:
+      - "5000:5000"
+    network_mode: "host"
+    volumes:
+      - ./data:/GENRE/data
+      - ./models:/GENRE/models

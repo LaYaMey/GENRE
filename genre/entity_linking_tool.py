@@ -29,7 +29,7 @@ def _get_trie_path(database_name: str, table_name: str, column_name: str = "") -
         parts.append(column_name.strip().replace(" ", "_").lower())
 
     filename = "trie_" + "__".join(parts) + ".pkl"
-    return os.path.join(os.path.dirname(__file__), "..", "data", filename)
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data", filename))
 
 def link_entities(candidate_entities, data_entries, configure_entity_tags=True, database_name="", table_name="", column_name=""):
     model = get_model()
@@ -42,8 +42,9 @@ def link_entities(candidate_entities, data_entries, configure_entity_tags=True, 
             try:
                 with open(trie_path, "rb") as f:
                     trie = pickle.load(f)
+                #print(f"Trie file loaded from {trie_path}.", flush=True)
             except Exception as e:
-                print(f"⚠️ Failed to load trie from {trie_path}: {e}")
+                print(f"⚠️ Failed to load trie from {trie_path}: {e}", flush=True)
 
     # If no trie loaded (or no database_name given), create a new one
     if trie is None:
@@ -56,8 +57,9 @@ def link_entities(candidate_entities, data_entries, configure_entity_tags=True, 
             os.makedirs(os.path.dirname(trie_path), exist_ok=True)
             with open(trie_path, "wb") as f:
                 pickle.dump(trie, f)
+            #print(f"Trie file stored to {trie_path}.", flush=True)
         else:
-            print("No unique combination of database and table given, trie was not cached.")
+            print("No unique combination of database and table given, trie was not cached.", flush=True)
 
     top_results = []
 

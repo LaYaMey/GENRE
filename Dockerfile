@@ -30,6 +30,7 @@ RUN pip install -e .
 
 # Make model directory available inside container
 VOLUME ["/models"]
+VOLUME ["/data"]
 
 # Expose the FastAPI port
 EXPOSE 5000

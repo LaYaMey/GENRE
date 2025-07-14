@@ -16,9 +16,9 @@ class LinkRequest(BaseModel):
     candidate_entities: List[str]
     data_entries: List[str]
     configure_entity_tags: Optional[bool] = True
-    database_name = Optional[str] = ""
-    table_name = Optional[str] = ""
-    column_name = Optional[str] = ""
+    database_name: Optional[str] = None
+    table_name: Optional[str] = None
+    column_name: Optional[str] = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -44,7 +44,7 @@ app = FastAPI(lifespan=lifespan)
 async def link_entities_endpoint(req: LinkRequest):
     try:
         # Use the globally loaded model/trie, no need to pass model_path anymore
-        print(req.configure_entity_tags)
+        #print(req.configure_entity_tags)
         results = link_entities(
             candidate_entities=req.candidate_entities,
             data_entries=req.data_entries,
