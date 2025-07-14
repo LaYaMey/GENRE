@@ -12,7 +12,7 @@ def download_and_extract_model(model_name: str, models_dir: str = "/models"):
     """
     model_path = os.path.join(models_dir, model_name)
     if os.path.isdir(model_path):
-        print(f"Model '{model_name}' already exists at {model_path}. Skipping download.")
+        print(f"Model '{model_name}' already exists at {model_path}. Skipping download.", flush=True)
         return
 
     # Map model_name to download URL based on your bash script URLs
@@ -36,13 +36,13 @@ def download_and_extract_model(model_name: str, models_dir: str = "/models"):
     os.makedirs(models_dir, exist_ok=True)
     tar_path = os.path.join(models_dir, f"{model_name}.tar.gz")
 
-    print(f"Downloading model '{model_name}' from {url} ...")
+    print(f"Downloading model '{model_name}' from {url} ...", flush=True)
     urllib.request.urlretrieve(url, tar_path)
-    print(f"Download complete. Extracting {tar_path} ...")
+    print(f"Download complete. Extracting {tar_path} ...", flush=True)
 
     with tarfile.open(tar_path, "r:gz") as tar:
         tar.extractall(path=models_dir)
 
-    print(f"Extraction complete. Removing archive {tar_path} ...")
+    print(f"Extraction complete. Removing archive {tar_path} ...", flush=True)
     os.remove(tar_path)
-    print(f"Model '{model_name}' is ready at {model_path}.")
+    print(f"Model '{model_name}' is ready at {model_path}.", flush=True)
