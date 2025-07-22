@@ -8,3 +8,4 @@ services:
     volumes:
       - ./data:/GENRE/data
       - ./models:/GENRE/models
+    restart: unless-stopped
