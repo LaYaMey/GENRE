@@ -65,7 +65,10 @@ def link_entities(candidate_entities, data_entries, configure_entity_tags=True, 
 
     for data_entry in data_entries:
         if configure_entity_tags:
-            sentence = f'[START_ENT] {data_entry} [END_ENT]'
+            if "[START_ENT]" and "[END_ENT]" in data_entry:
+                sentence = data_entry
+            else:
+                sentence = f'[START_ENT] {data_entry} [END_ENT]'
         else:
             sentence = data_entry
 
